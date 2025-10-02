@@ -1,0 +1,69 @@
+# Rustfmt configuration for Huginn project
+# Following project coding standards with tabs for indentation
+
+# Use tabs for indentation
+hard_tabs = true
+tab_spaces = 4
+
+# Edition specification
+edition = "2024"
+
+# Line width
+max_width = 100
+
+# Import formatting
+imports_granularity = "Crate"
+group_imports = "StdExternalCrate"
+reorder_imports = true
+
+# Formatting style
+newline_style = "Unix"
+use_small_heuristics = "Default"
+
+# Function definitions
+fn_single_line = false
+where_single_line = true
+
+# Match blocks
+match_block_trailing_comma = true
+
+# Control flow
+control_brace_style = "AlwaysSameLine"
+indent_style = "Block"
+
+# Comments and documentation
+wrap_comments = false
+normalize_comments = false
+normalize_doc_attributes = false
+
+# Trailing elements
+trailing_comma = "Vertical"
+trailing_semicolon = true
+
+# Blank lines
+blank_lines_upper_bound = 2
+blank_lines_lower_bound = 0
+
+# Braces
+brace_style = "SameLineWhere"
+
+# Chains
+chain_width = 60
+overflow_delimited_expr = true
+
+# Error handling
+force_explicit_abi = true
+format_code_in_doc_comments = true
+
+# Miscellaneous
+remove_nested_parens = true
+use_try_shorthand = true
+format_strings = true
+format_macro_matchers = true
+format_macro_bodies = true
+hex_literal_case = "Upper"
+
+# Unstable features (require nightly)
+# These are commented out but can be enabled with nightly Rust
+# unstable_features = true
+# format_generated_files = false
