@@ -49,10 +49,10 @@ impl Scanner {
 					match plugin.scan(target).await {
 						Ok(results) => {
 							info!("Scan completed: {} results found", results.len());
-						},
+						}
 						Err(e) => {
 							error!("Scan failed: {}", e);
-						},
+						}
 					}
 				}
 			}

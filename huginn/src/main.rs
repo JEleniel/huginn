@@ -11,10 +11,21 @@ mod logging;
 mod plugins;
 mod scanner;
 
+use clap::Parser;
+use config::{Cli, Commands};
 use log::{error, info};
 
 #[tokio::main]
 async fn main() {
+	// Parse command-line arguments
+	let cli = Cli::parse();
+
+	// Handle version command
+	if let Some(Commands::Version) = cli.command {
+		println!("Huginn version {}", env!("CARGO_PKG_VERSION"));
+		return;
+	}
+
 	// Initialize logging
 	if let Err(e) = logging::init() {
 		eprintln!("Failed to initialize logging: {}", e);
@@ -23,16 +34,19 @@ async fn main() {
 
 	info!("Starting Huginn cyber threat scanning toolkit");
 
-	// Load configuration
-	let config = match config::load() {
+	// Load configuration with CLI arguments
+	let config = match config::load(&cli) {
 		Ok(cfg) => cfg,
 		Err(e) => {
 			error!("Failed to load configuration: {}", e);
+			eprintln!("Error: {}", e);
 			std::process::exit(1);
-		},
+		}
 	};
 
 	info!("Configuration loaded successfully");
+	info!("Targets: {:?}", config.targets);
+	info!("Scan types: {:?}", config.scan_types);
 
 	// Initialize scanner
 	let scanner = scanner::Scanner::new(config);
