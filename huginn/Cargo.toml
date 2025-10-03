@@ -1,21 +1,21 @@
 [package]
 name = "huginn"
 version.workspace = true
-edition.workspace = true
-license.workspace = true
 authors.workspace = true
-repository.workspace = true
+edition.workspace = true
 description = "Cyber threat scanning toolkit - The raven of Odin searches the world for knowledge and threats"
+repository.workspace = true
+license.workspace = true
 
 [dependencies]
-tokio.workspace = true
+async-trait.workspace = true
+chrono.workspace = true
 config.workspace = true
+fern.workspace = true
+log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-log.workspace = true
-fern.workspace = true
-chrono.workspace = true
-async-trait.workspace = true
+tokio.workspace = true
 
-[lints.rust]
-unsafe_code = "forbid"
+[lints]
+workspace = true
