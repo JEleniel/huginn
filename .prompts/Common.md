@@ -4,6 +4,7 @@
 
 - You may use any MCP servers you have access to.
 - Respect the `.gitignore` file; do not read or modify files listed in it.
+- The `docs/design/agents/TECHNOLOGIES.md` file, if present, lists the technologies you may use. You may pull in additional libraries, but may not alter or replace any of the ones listed in that document. The format is `type - name:version`, one line each.
 - Do not modify files in the `.github` or `.prompts` folders.
 
 ## Coding Standards
