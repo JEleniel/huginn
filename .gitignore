@@ -1,6 +1,12 @@
 # Project specific
 # Add files and directories specific to your project that should be ignored here
 
+# Rust specific
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
 # Visual Studio Code
 .vscode/*
 !.vscode/*.code-snippets
