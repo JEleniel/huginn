@@ -4,12 +4,13 @@ members = ["huginn"]
 
 [workspace.package]
 version = "0.1.0-alpha.1"
+authors = ["JEleniel"]
 edition = "2024"
 repository = "https://github.com/JEleniel/huginn"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-async-trait = { version = "0.1", features = ["send"] }
+async-trait = "0.1"
 chrono = { version = "0.4", features = ["serde"] }
 config = { version = "0.15.18", features = ["ini", "json"] }
 fern = { version = "0.7.1", features = ["colored", "date-based"] }
