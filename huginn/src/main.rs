@@ -11,6 +11,7 @@ mod formatters;
 mod logging;
 mod plugins;
 mod scanner;
+mod security;
 
 use clap::Parser;
 use config::{Cli, Commands};
@@ -44,6 +45,13 @@ async fn main() {
 			std::process::exit(1);
 		}
 	};
+
+	// Validate config file security if one was loaded
+	if let Some(config_file) = &config.config_file
+		&& config_file.exists()
+	{
+		security::validate_config_file_security(config_file);
+	}
 
 	info!("Configuration loaded successfully");
 	info!("Targets: {:?}", config.targets);

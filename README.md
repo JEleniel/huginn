@@ -80,6 +80,34 @@ huginn --help
 huginn scan --help
 ```
 
+### Output Formats
+
+Huginn supports three output formats:
+
+- **text** (default): Human-readable colored output with summary statistics
+- **json**: Machine-readable JSON format
+- **csv**: Spreadsheet-compatible CSV format
+
+```bash
+# Text output with colors (default)
+huginn scan -t 192.168.1.1
+
+# JSON output
+huginn scan -t 192.168.1.1 -f json
+
+# CSV output for spreadsheets
+huginn scan -t 192.168.1.1 -f csv -o results.csv
+```
+
+### Progress Reporting
+
+Huginn displays a progress bar for multi-target scans showing:
+- Current operation (scan type and target)
+- Elapsed time and estimated time to completion
+- Progress percentage
+
+Progress bars are automatically disabled in verbose mode (`-v`) or when output is redirected.
+
 ### Environment Variables
 
 All configuration options can be set via environment variables with the `HUGINN_` prefix:
