@@ -1,0 +1,12 @@
+{
+	"targets": [
+		"192.168.1.1",
+		"192.168.1.0/24",
+		"example.com",
+		"www.example.org"
+	],
+	"scan_types": ["ping", "tcp_connect", "tcp_syn", "udp"],
+	"port": 8080,
+	"output_format": "json",
+	"log_level": "debug"
+}

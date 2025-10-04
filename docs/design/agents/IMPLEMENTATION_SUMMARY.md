@@ -5,7 +5,7 @@
 **Project**: Huginn - Cyber Threat Scanning Toolkit
 **Current Version**: 0.1.0-alpha.1
 **Rust Edition**: 2024
-**Last Updated**: 2025-01-03
+**Last Updated**: 2025-10-03
 
 ## Overview
 
@@ -41,30 +41,34 @@ Huginn is a cyber threat scanning toolkit written in Rust, designed to perform v
 - `unsafe_code = "forbid"` enforced at workspace level
 - Clear module separation established
 
-### Phase 2: Configuration System 🔄 (Partial)
+### Phase 2: Configuration System ✅ (Complete)
 
-**Status**: 🔄 Partial Implementation
+**Status**: ✅ Complete
 
 **Completed**:
 - [x] Configuration structure defined
 - [x] Config loading from files
-- [x] Environment variable support (structure in place)
-- [x] Default values
-- [x] Basic validation
-- [x] Unit tests for config module
-
-**Pending**:
-- [ ] CLI argument parsing (requires clap integration)
-- [ ] Configuration merging with precedence
-- [ ] Advanced validation (semantic checks)
-- [ ] Example configuration files
-- [ ] Configuration documentation
+- [x] Environment variable support with `HUGINN_` prefix
+- [x] CLI argument parsing with clap
+- [x] Configuration merging with precedence (CLI > Env > File > Defaults)
+- [x] Comprehensive semantic validation
+- [x] Example configuration files (config.example.json, config.full.json, config.minimal.json)
+- [x] Full configuration documentation in README.md
+- [x] Unit tests for config module (8 tests covering validation)
 
 **Current Capabilities**:
-- Load from `config.json` file
-- Environment variable overrides with `HUGINN_` prefix
+- Load from `config.json` file or custom path via `--config`
+- Environment variable overrides with `HUGINN_` prefix and `__` separator
+- Command-line argument parsing with scan and version subcommands
+- Configuration precedence: CLI > Env > File > Defaults
+- Semantic validation for:
+  - Non-empty targets
+  - Valid scan types (ping, tcp_connect, tcp_syn, udp)
+  - Valid output formats (text, json, csv)
+  - Valid log levels (debug, info, warn, error)
+  - Valid port ranges (1-65535)
+- Verbose output support (-v, -vv, -vvv)
 - Sensible defaults for all optional fields
-- Basic type validation via serde
 
 ### Phase 3: Logging System ✅ (Complete)
 
@@ -178,25 +182,41 @@ Huginn is a cyber threat scanning toolkit written in Rust, designed to perform v
    - Status: ⏳ Not started
    - Requires: TCP/IP stack fingerprinting
 
-### Phase 7: CLI Interface ⏳ (Not Started)
+### Phase 7: CLI Interface 🔄 (Partial)
 
-**Status**: ⏳ Not Started
+**Status**: 🔄 Partial Implementation
+
+**Completed**:
+- [x] Clap integration for argument parsing
+- [x] Command structure (scan, version)
+- [x] Argument validation
+- [x] Help text and documentation
+- [x] Global options (--config, --log-level, --verbose)
+- [x] Scan command with full options
 
 **Pending**:
-- [ ] Clap integration for argument parsing
-- [ ] Command structure (scan, daemon, version)
-- [ ] Argument validation
-- [ ] Help text and documentation
+- [ ] Daemon command (future feature)
 - [ ] Progress indicators
-- [ ] Output formatting
+- [ ] Advanced output formatting (text, json, csv)
+- [ ] File output support
 
-**Planned CLI Structure**:
+**Current CLI Structure**:
 ```bash
-huginn scan [OPTIONS] <TARGET>...
-huginn daemon [OPTIONS]
-huginn --version
+huginn scan --target <TARGET>... [OPTIONS]
+huginn version
 huginn --help
+huginn scan --help
 ```
+
+**Available Options**:
+- `-t, --target <TARGET>` - Target hosts (required)
+- `-s, --scan-type <TYPE>` - Scan types (default: ping)
+- `-p, --ports <PORTS>` - Port specification
+- `-o, --output <FILE>` - Output file path
+- `-f, --format <FORMAT>` - Output format (text, json, csv)
+- `-c, --config <FILE>` - Config file path
+- `--log-level <LEVEL>` - Log level
+- `-v, --verbose` - Verbose output (repeatable)
 
 ### Phase 8: Testing Infrastructure 🔄 (Minimal)
 
@@ -251,15 +271,15 @@ huginn --help
 | chrono | 0.4 | Date/time | ✅ In use |
 | async-trait | 0.1 | Async traits | ✅ In use |
 
-### Planned Dependencies
+### Planned/Added Dependencies
 
-| Dependency | Purpose | Priority |
-|------------|---------|----------|
-| clap | CLI parsing | High |
-| surge-ping | ICMP support | High |
-| pnet | Packet crafting | High |
-| colored | Colored output | Medium |
-| indicatif | Progress bars | Medium |
+| Dependency | Purpose | Status |
+|------------|---------|--------|
+| clap | CLI parsing | ✅ Added (4.5) |
+| surge-ping | ICMP support | ⏳ Planned |
+| pnet | Packet crafting | ⏳ Planned |
+| colored | Colored output | ⏳ Planned |
+| indicatif | Progress bars | ⏳ Planned |
 
 ## Current Capabilities
 
@@ -340,19 +360,19 @@ huginn --help
 
 ## Next Steps
 
-### Immediate Priorities (Phase 7)
+### Immediate Priorities (Phase 6)
 
-1. **CLI Interface Implementation**
-   - Add clap dependency
-   - Implement argument parsing
-   - Create help text
-   - Add output formatting
+1. **First Plugin Implementation**
+   - Start with TCP Connect scan (no privileges needed)
+   - Implement basic port scanning
+   - Test with real targets
+   - Document usage
 
-2. **Configuration Enhancement**
-   - Implement CLI argument override
-   - Add configuration validation
-   - Create example config files
-   - Document all options
+2. **Output Formatting**
+   - Implement text formatter
+   - Implement JSON formatter
+   - Implement CSV formatter
+   - Add file output support
 
 ### Short-term Goals (Phase 6)
 
@@ -450,10 +470,10 @@ huginn --help
 
 Huginn has a solid foundation with core infrastructure complete. The project follows Rust best practices and maintains high code quality standards. The next phase focuses on implementing the CLI interface and first scan plugins to deliver usable functionality.
 
-**Overall Progress**: ~30% complete
-**Core Infrastructure**: 80% complete
+**Overall Progress**: ~35% complete
+**Core Infrastructure**: 85% complete (Config + CLI done)
 **Functional Features**: 10% complete
-**Documentation**: 40% complete
-**Testing**: 20% complete
+**Documentation**: 50% complete (Config docs added)
+**Testing**: 25% complete (Config tests added)
 
 The project is on track but requires focused effort on plugin implementation and CLI development to reach a usable v0.1.0 release.

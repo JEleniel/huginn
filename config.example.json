@@ -1,0 +1,6 @@
+{
+	"targets": ["192.168.1.1", "example.com"],
+	"scan_types": ["ping", "tcp_connect"],
+	"output_format": "text",
+	"log_level": "info"
+}

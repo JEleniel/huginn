@@ -41,24 +41,125 @@ Explore the [Getting Started](../../wiki/Getting-Started) guide.
 ### Installation
 
 ```bash
-# Install command here
+# Clone the repository
+git clone https://github.com/JEleniel/huginn.git
+cd huginn
+
+# Build the project
+cargo build --release
+
+# Run Huginn
+./target/release/huginn --help
 ```
 
 ## Configuration
 
-The following configuration options are available:
+Huginn supports multiple configuration methods with the following precedence (highest to lowest):
+1. Command-line arguments
+2. Environment variables (prefix: `HUGINN_`)
+3. Configuration file (`config.json`)
+4. Default values
+
+### Command-Line Usage
+
+```bash
+# Basic scan
+huginn scan --target 192.168.1.1
+
+# Multiple targets with specific scan types
+huginn scan --target 192.168.1.1 --target example.com --scan-type ping,tcp_connect
+
+# Specify output format
+huginn scan --target 192.168.1.1 --format json --output results.json
+
+# Show version
+huginn version
+
+# Get help
+huginn --help
+huginn scan --help
+```
 
 ### Environment Variables
 
-| Variable     | Description                       | Default |
-| ------------ | --------------------------------- | ------- |
-| `API_KEY`    | Authentication key for API access | N/A     |
-| `DEBUG_MODE` | Enable debug logging              | false   |
-| `PORT`       | Server port number                | 3000    |
+All configuration options can be set via environment variables with the `HUGINN_` prefix:
+
+| Variable                | Description                                    | Default |
+| ----------------------- | ---------------------------------------------- | ------- |
+| `HUGINN_CONFIG`         | Path to configuration file                     | N/A     |
+| `HUGINN_TARGETS`        | Comma-separated list of targets to scan        | N/A     |
+| `HUGINN_SCAN_TYPES`     | Comma-separated list of scan types to perform  | `ping`  |
+| `HUGINN_PORT`           | Server port for daemon mode                    | N/A     |
+| `HUGINN_OUTPUT_FORMAT`  | Output format: text, json, or csv              | `text`  |
+| `HUGINN_LOG_LEVEL`      | Log level: debug, info, warn, or error         | `info`  |
+
+Example:
+
+```bash
+HUGINN_TARGETS="192.168.1.1,example.com" HUGINN_SCAN_TYPES="ping,tcp_connect" huginn scan --target localhost
+```
 
 ### Configuration File
 
-The `config.json` file supports the following options:
+You can specify configuration in a JSON file. By default, Huginn looks for `config.json` in the current directory, or you can specify a custom path with `--config` or `HUGINN_CONFIG`.
+
+**Example: config.example.json**
+
+```json
+{
+	"targets": ["192.168.1.1", "example.com"],
+	"scan_types": ["ping", "tcp_connect"],
+	"output_format": "text",
+	"log_level": "info"
+}
+```
+
+**Example: config.full.json (all options)**
+
+```json
+{
+	"targets": [
+		"192.168.1.1",
+		"192.168.1.0/24",
+		"example.com"
+	],
+	"scan_types": ["ping", "tcp_connect", "tcp_syn", "udp"],
+	"port": 8080,
+	"output_format": "json",
+	"log_level": "debug"
+}
+```
+
+**Example: config.minimal.json**
+
+```json
+{
+	"targets": ["localhost"]
+}
+```
+
+### Configuration Options Reference
+
+| Option           | Type     | Description                                              | Default  | Required |
+| ---------------- | -------- | -------------------------------------------------------- | -------- | -------- |
+| `targets`        | array    | List of targets (IPs, hostnames, CIDR ranges)            | `[]`     | Yes      |
+| `scan_types`     | array    | Scan types: `ping`, `tcp_connect`, `tcp_syn`, `udp`      | `[ping]` | No       |
+| `port`           | number   | Server port for daemon mode (future feature)             | N/A      | No       |
+| `output_format`  | string   | Output format: `text`, `json`, or `csv`                  | `text`   | No       |
+| `log_level`      | string   | Logging level: `debug`, `info`, `warn`, or `error`       | `info`   | No       |
+
+### Scan Types
+
+The following scan types are available:
+
+| Scan Type       | Description                                            | Privileges Required |
+| --------------- | ------------------------------------------------------ | ------------------- |
+| `ping`          | ICMP echo request to check if host is alive            | CAP_NET_RAW or root |
+| `tcp_connect`   | Full TCP connection to determine port status           | None                |
+| `tcp_syn`       | Stealth SYN scan (half-open connection)                | CAP_NET_RAW or root |
+| `udp`           | UDP port scanning                                      | None                |
+
+**Note:** Some scan types require elevated privileges. Run with appropriate permissions or use scans that don't require special privileges.
 
 ## Support
 
@@ -82,6 +183,48 @@ Please be sure to read and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 [Contributing to the Project](CONTRIBUTING.md)
 
 ## Building and Testing
+
+### Building
+
+```bash
+# Debug build
+cargo build
+
+# Release build (optimized)
+cargo build --release
+
+# Check without building
+cargo check
+```
+
+### Testing
+
+```bash
+# Run all tests
+cargo test
+
+# Run tests with output
+cargo test -- --nocapture
+
+# Run specific test
+cargo test test_name
+```
+
+### Code Quality
+
+```bash
+# Format code
+cargo fmt
+
+# Check formatting
+cargo fmt --check
+
+# Run linter
+cargo clippy -- -D warnings
+
+# Security audit
+cargo audit
+```
 
 ## Versioning
 

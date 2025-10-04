@@ -10,6 +10,7 @@ license.workspace = true
 [dependencies]
 async-trait.workspace = true
 chrono.workspace = true
+clap.workspace = true
 config.workspace = true
 fern.workspace = true
 log.workspace = true
