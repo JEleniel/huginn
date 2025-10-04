@@ -182,9 +182,9 @@ Huginn is a cyber threat scanning toolkit written in Rust, designed to perform v
    - Status: ⏳ Not started
    - Requires: TCP/IP stack fingerprinting
 
-### Phase 7: CLI Interface 🔄 (Partial)
+### Phase 7: CLI Interface ✅ (Complete)
 
-**Status**: 🔄 Partial Implementation
+**Status**: ✅ Complete
 
 **Completed**:
 - [x] Clap integration for argument parsing
@@ -193,12 +193,33 @@ Huginn is a cyber threat scanning toolkit written in Rust, designed to perform v
 - [x] Help text and documentation
 - [x] Global options (--config, --log-level, --verbose)
 - [x] Scan command with full options
+- [x] Progress indicators with indicatif
+- [x] Advanced output formatting (text, json, csv)
+- [x] File output support
+- [x] Colored output with TTY detection
+- [x] Summary statistics in output
 
 **Pending**:
 - [ ] Daemon command (future feature)
-- [ ] Progress indicators
-- [ ] Advanced output formatting (text, json, csv)
-- [ ] File output support
+
+**Output Formatters**:
+- **TextFormatter**: Human-readable colored output with summary statistics
+  - Automatically disables colors for non-TTY outputs
+  - Shows targets scanned, scan types, and status counts
+  - Groups results by target
+- **JsonFormatter**: Machine-readable JSON with pretty-printing
+  - Includes metadata (total_results)
+  - Fully structured for parsing
+- **CsvFormatter**: Spreadsheet-compatible output
+  - Standard CSV format with header row
+  - Escapes commas and newlines in details
+
+**Progress Reporting**:
+- Displays progress bar for multi-target/multi-plugin scans
+- Shows current operation (scan type and target)
+- Displays elapsed time and ETA
+- Automatically disabled in verbose mode
+- Only shown for TTY outputs
 
 **Current CLI Structure**:
 ```bash
@@ -470,10 +491,10 @@ huginn scan --help
 
 Huginn has a solid foundation with core infrastructure complete. The project follows Rust best practices and maintains high code quality standards. The next phase focuses on implementing the CLI interface and first scan plugins to deliver usable functionality.
 
-**Overall Progress**: ~35% complete
-**Core Infrastructure**: 85% complete (Config + CLI done)
-**Functional Features**: 10% complete
+**Overall Progress**: ~45% complete
+**Core Infrastructure**: 95% complete (Config + CLI + Output done)
+**Functional Features**: 15% complete (Output formatting complete)
 **Documentation**: 50% complete (Config docs added)
-**Testing**: 25% complete (Config tests added)
+**Testing**: 30% complete (Config + Formatters tests added)
 
 The project is on track but requires focused effort on plugin implementation and CLI development to reach a usable v0.1.0 release.

@@ -32,6 +32,7 @@ pub struct ScanResult {
 #[async_trait]
 pub trait Plugin: Send + Sync {
 	/// Get the name of the plugin
+	#[allow(dead_code)]
 	fn name(&self) -> String;
 
 	/// Get the scan type identifier

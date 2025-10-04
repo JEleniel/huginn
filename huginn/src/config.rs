@@ -24,6 +24,9 @@ pub struct Config {
 	pub output_format: String,
 	/// Log level: debug, info, warn, error
 	pub log_level: String,
+	/// Optional output file path
+	#[serde(skip)]
+	pub output_file: Option<PathBuf>,
 	/// Configuration file path
 	#[serde(skip)]
 	pub config_file: Option<PathBuf>,
@@ -40,6 +43,7 @@ impl Default for Config {
 			port: None,
 			output_format: "text".to_string(),
 			log_level: "info".to_string(),
+			output_file: None,
 			config_file: None,
 			verbose: 0,
 		}
@@ -162,6 +166,7 @@ pub fn load(cli: &Cli) -> Result<Config, ConfigError> {
 			.map(|s| s.trim().to_string())
 			.collect();
 		config.output_format = scan_args.format.clone();
+		config.output_file = scan_args.output.clone();
 	}
 
 	// Validate configuration

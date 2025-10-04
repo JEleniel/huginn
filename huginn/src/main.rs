@@ -7,9 +7,11 @@
 //! This is the main entry point for the Huginn executable.
 
 mod config;
+mod formatters;
 mod logging;
 mod plugins;
 mod scanner;
+mod security;
 
 use clap::Parser;
 use config::{Cli, Commands};
@@ -44,17 +46,58 @@ async fn main() {
 		}
 	};
 
+	// Validate config file security if one was loaded
+	if let Some(config_file) = &config.config_file
+		&& config_file.exists()
+	{
+		security::validate_config_file_security(config_file);
+	}
+
 	info!("Configuration loaded successfully");
 	info!("Targets: {:?}", config.targets);
 	info!("Scan types: {:?}", config.scan_types);
 
 	// Initialize scanner
-	let scanner = scanner::Scanner::new(config);
+	let scanner = scanner::Scanner::new(config.clone());
 
 	// Run the scanner
-	if let Err(e) = scanner.run().await {
-		error!("Scanner error: {}", e);
-		std::process::exit(1);
+	let results = match scanner.run().await {
+		Ok(res) => res,
+		Err(e) => {
+			error!("Scanner error: {}", e);
+			std::process::exit(1);
+		}
+	};
+
+	info!("Scan completed with {} results", results.len());
+
+	// Format and output results
+	let colored_output = config.output_file.is_none() && atty::is(atty::Stream::Stdout);
+	let formatter = formatters::get_formatter(&config.output_format, colored_output);
+
+	let formatted_output = match formatter.format(&results) {
+		Ok(output) => output,
+		Err(e) => {
+			error!("Failed to format output: {}", e);
+			std::process::exit(1);
+		}
+	};
+
+	// Write to file or stdout
+	if let Some(output_path) = &config.output_file {
+		match std::fs::write(output_path, &formatted_output) {
+			Ok(_) => {
+				info!("Results written to {}", output_path.display());
+				println!("Results written to {}", output_path.display());
+			}
+			Err(e) => {
+				error!("Failed to write output file: {}", e);
+				eprintln!("Error writing output file: {}", e);
+				std::process::exit(1);
+			}
+		}
+	} else {
+		println!("{}", formatted_output);
 	}
 
 	info!("Huginn completed successfully");

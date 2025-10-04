@@ -10,6 +10,7 @@ use async_trait::async_trait;
 use std::error::Error;
 
 /// UDP scan plugin
+#[allow(dead_code)]
 pub struct UdpScanPlugin;
 
 #[async_trait]

@@ -10,6 +10,7 @@ use async_trait::async_trait;
 use std::error::Error;
 
 /// Ping scan plugin
+#[allow(dead_code)]
 pub struct PingScanPlugin;
 
 #[async_trait]

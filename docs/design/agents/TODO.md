@@ -123,11 +123,11 @@ This document provides a detailed, phase-by-phase plan for implementing Huginn. 
 
 **Related**: Requirement 5.4, NFR-SE2
 
-## Phase 4: CLI Interface ⏳ (Not Started)
+## Phase 4: CLI Interface ✅ (Complete)
 
-### Task 4.1: Basic CLI Structure ⏳
+### Task 4.1: Basic CLI Structure ✅
 
-**Status**: ⏳ Not Started
+**Status**: ✅ Complete
 
 **Summary**: Implement command-line interface with clap.
 
@@ -178,9 +178,9 @@ This document provides a detailed, phase-by-phase plan for implementing Huginn. 
 
 ---
 
-### Task 4.2: Output Formatting ⏳
+### Task 4.2: Output Formatting ✅
 
-**Status**: ⏳ Not Started
+**Status**: ✅ Complete
 
 **Summary**: Implement multiple output formats for scan results.
 
@@ -219,9 +219,9 @@ This document provides a detailed, phase-by-phase plan for implementing Huginn. 
 
 ---
 
-### Task 4.3: Progress Reporting ⏳
+### Task 4.3: Progress Reporting ✅
 
-**Status**: ⏳ Not Started
+**Status**: ✅ Complete
 
 **Summary**: Add progress indicators for long-running scans.
 
