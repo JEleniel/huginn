@@ -38,17 +38,57 @@ impl OutputFormatter for TextFormatter {
 			return Ok(output);
 		}
 
+		// Calculate statistics
+		let total = results.len();
+		let mut targets_set = std::collections::HashSet::new();
+		let mut scan_types_set = std::collections::HashSet::new();
+		let mut status_counts = std::collections::HashMap::new();
+
+		for result in results {
+			targets_set.insert(&result.target);
+			scan_types_set.insert(&result.scan_type);
+			*status_counts.entry(&result.status).or_insert(0) += 1;
+		}
+
 		// Summary header
 		if self.colored {
 			output.push_str(&format!("{}\n", "Scan Results".bold().underline()));
+			output.push_str(&format!("{} {}\n", "Total results:".bold(), total));
+			output.push_str(&format!(
+				"{} {}\n",
+				"Targets scanned:".bold(),
+				targets_set.len()
+			));
 			output.push_str(&format!(
 				"{} {}\n\n",
-				"Total results:".bold(),
-				results.len()
+				"Scan types:".bold(),
+				scan_types_set.len()
 			));
+
+			// Status summary
+			output.push_str(&format!("{}\n", "Status Summary:".bold()));
+			for (status, count) in status_counts.iter() {
+				let status_str = match status.as_str() {
+					"open" | "up" | "alive" => status.green().to_string(),
+					"closed" | "down" | "dead" => status.red().to_string(),
+					"filtered" => status.yellow().to_string(),
+					_ => status.normal().to_string(),
+				};
+				output.push_str(&format!("  {}: {}\n", status_str, count));
+			}
+			output.push('\n');
 		} else {
 			output.push_str("Scan Results\n");
-			output.push_str(&format!("Total results: {}\n\n", results.len()));
+			output.push_str(&format!("Total results: {}\n", total));
+			output.push_str(&format!("Targets scanned: {}\n", targets_set.len()));
+			output.push_str(&format!("Scan types: {}\n\n", scan_types_set.len()));
+
+			// Status summary
+			output.push_str("Status Summary:\n");
+			for (status, count) in status_counts.iter() {
+				output.push_str(&format!("  {}: {}\n", status, count));
+			}
+			output.push('\n');
 		}
 
 		// Results by target
