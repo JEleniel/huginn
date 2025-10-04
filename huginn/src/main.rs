@@ -7,6 +7,7 @@
 //! This is the main entry point for the Huginn executable.
 
 mod config;
+mod formatters;
 mod logging;
 mod plugins;
 mod scanner;
@@ -49,12 +50,31 @@ async fn main() {
 	info!("Scan types: {:?}", config.scan_types);
 
 	// Initialize scanner
-	let scanner = scanner::Scanner::new(config);
+	let scanner = scanner::Scanner::new(config.clone());
 
 	// Run the scanner
-	if let Err(e) = scanner.run().await {
-		error!("Scanner error: {}", e);
-		std::process::exit(1);
+	let results = match scanner.run().await {
+		Ok(res) => res,
+		Err(e) => {
+			error!("Scanner error: {}", e);
+			std::process::exit(1);
+		}
+	};
+
+	info!("Scan completed with {} results", results.len());
+
+	// Format and output results
+	let colored_output = atty::is(atty::Stream::Stdout);
+	let formatter = formatters::get_formatter(&config.output_format, colored_output);
+
+	match formatter.format(&results) {
+		Ok(output) => {
+			println!("{}", output);
+		}
+		Err(e) => {
+			error!("Failed to format output: {}", e);
+			std::process::exit(1);
+		}
 	}
 
 	info!("Huginn completed successfully");

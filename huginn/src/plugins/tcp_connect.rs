@@ -10,6 +10,7 @@ use async_trait::async_trait;
 use std::error::Error;
 
 /// TCP Connect scan plugin
+#[allow(dead_code)]
 pub struct TcpConnectScanPlugin;
 
 #[async_trait]
